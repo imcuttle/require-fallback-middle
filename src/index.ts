@@ -4,13 +4,20 @@
  */
 import * as resolveFrom from 'resolve-from'
 import requireResolveHook, { bypass, unhook, Match } from 'require-resolve-hook'
+import * as Module from 'module'
+
+type FallbackDirs = string[] | ((id: string, parent: Module, isMain: boolean) => string[])
 
 function requireFallbackMiddle(
   match: Match,
-  fallbackDirs = [process.cwd(), __dirname],
+  fallbackDirs: FallbackDirs = (id, parent) => [process.cwd(), parent?.filename || __dirname],
   { useLocalByPass = true } = {}
 ) {
-  const ctx = requireResolveHook(match, (id) => {
+  const ctx = requireResolveHook(match, (id, parent, isMain) => {
+    if (typeof fallbackDirs === 'function') {
+      fallbackDirs = fallbackDirs(id, parent, isMain)
+    }
+
     for (const dir of fallbackDirs) {
       const bypassInner = useLocalByPass ? ctx.bypass : bypass
       const filename = bypassInner(() => resolveFrom.silent(dir, id))
