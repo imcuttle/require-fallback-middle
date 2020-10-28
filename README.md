@@ -33,7 +33,7 @@ const { unhook } = requireFallbackMiddle()
 #### `requireFallbackMiddle(match: Match, fallbackDirs?: string[] | ((id: string, parent: Module, isMain: boolean) => string[]))`
 
 - `match`: The registered module match
-- `fallbackDirs`: The registered module match (Default: `(id, parent) => [process.cwd(), parent?.filename || __dirname]`)
+- `fallbackDirs`: The registered module match (Default: `(id, parent) => [process.cwd(), dirname(parent?.filename) || __dirname]`)
 
 - **Returns:** [require-resolve-hook result](https://github.com/imcuttle/require-resolve-hook/#api)
 
