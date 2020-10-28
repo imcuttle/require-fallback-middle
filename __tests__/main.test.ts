@@ -7,7 +7,7 @@
 import requireFallbackMiddle, { bypass } from '../src'
 import { fixture, nodeModules } from './helper'
 
-const test = require('ava')
+import test from 'ava'
 
 test('spec requireFallbackMiddle', function (t) {
   const { unhook } = requireFallbackMiddle((id) => !id.startsWith('.'), [fixture(''), nodeModules('')])
