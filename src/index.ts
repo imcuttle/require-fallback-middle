@@ -11,15 +11,19 @@ type FallbackDirs = string[] | ((id: string, parent: Module, isMain: boolean) =>
 
 function requireFallbackMiddle(
   match: Match = (id) => !isAbsolute(id) && !id.startsWith('.'),
-  fallbackDirs: FallbackDirs = (id, parent) => [process.cwd(), parent ? dirname(parent.filename) : __dirname],
+  fallbackDirs: FallbackDirs = (id, parent) =>
+    [parent && dirname(parent.filename), process.cwd(), __dirname].filter(Boolean),
   { useLocalByPass = true } = {}
 ) {
   const ctx = requireResolveHook(match, (id, parent, isMain) => {
+    let dirs: string[]
     if (typeof fallbackDirs === 'function') {
-      fallbackDirs = fallbackDirs(id, parent, isMain)
+      dirs = fallbackDirs(id, parent, isMain)
+    } else {
+      dirs = fallbackDirs
     }
 
-    for (const dir of fallbackDirs) {
+    for (const dir of dirs) {
       const bypassInner = useLocalByPass ? ctx.bypass : bypass
       const filename = bypassInner(() => resolveFrom.silent(dir, id))
       if (filename) {
@@ -27,7 +31,7 @@ function requireFallbackMiddle(
       }
     }
 
-    const err = new Error(`Cannot find module '${id}' in \n${fallbackDirs.map((dir) => `- ${dir}`).join('\n')}`)
+    const err = new Error(`Cannot find module '${id}' in \n${dirs.map((dir) => `- ${dir}`).join('\n')}`)
     // @ts-ignore
     err.code = 'MODULE_NOT_FOUND'
     throw err
