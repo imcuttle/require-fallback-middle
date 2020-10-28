@@ -23,7 +23,6 @@ yarn add require-fallback-middle
 
 ```javascript
 import requireFallbackMiddle from 'require-fallback-middle'
-import { isAbsolute } from 'path'
 
 const { unhook } = requireFallbackMiddle()
 ```
