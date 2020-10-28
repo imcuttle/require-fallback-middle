@@ -1,6 +1,6 @@
 {
   "name": "require-fallback-middle",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Module to fallback the Node.js require and require.resolve function",
   "author": "imcuttle <imcuttle@163.com>",
   "scripts": {
