@@ -17,4 +17,4 @@ script:
   - npm install codecov nyc --no-save
   - npx nyc $(npm bin)/ava
 after_script:
-  - npx nyc --reporter=text-lcov | npx codecov --token=$CODECOV_TOKEN --pipe
+  - npx nyc report --reporter=text-lcov | npx codecov --token=$CODECOV_TOKEN --pipe
