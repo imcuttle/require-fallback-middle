@@ -13,7 +13,7 @@ cache:
 # - npm install
 
 script:
+  - npm install codecov nyc --no-save
   - npx nyc $(npm bin)/ava
 after_script:
-  - npm install codecov --no-save
-  - codecov --token=$CODECOV_TOKEN
+  - npx nyc --reporter=text-lcov | npx codecov --token=$CODECOV_TOKEN --pipe
